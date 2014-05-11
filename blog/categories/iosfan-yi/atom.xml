@@ -1,115 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
 
-<!DOCTYPE HTML>
-<html>
-<head>
-	<meta charset="utf-8">
-	<title>Gang’s Blog</title>
-	<meta name="author" content="NumberGuy">
-
-	
-	<meta name="description" content="May 7th, 2014 ios翻译 理解UIScrollView 我是一个对Mike Ashʼs系列文章的超级粉丝，尤其是他解释怎么去通过抓取进行重新
-building来确定Cocoa 工作特点。在本篇文章，我将尝试去做一些相似的事情，来完成我自己简单的scroll view，只有几行代码 &hellip;">
-	
-
-  <!-- http://t.co/dKP3o1e -->
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-	<link href="/atom.xml" rel="alternate" title="Gang’s Blog" type="application/atom+xml">
-	
-	<link rel="canonical" href="http://NumberGuy.github.io/">
-	<link href="/favicon.png" rel="shortcut icon">
-	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,400,700' rel='stylesheet' type='text/css'>
-	
-</head>
-
-
-<body>
-	<div class="container">
-		<div class="left-col">
-			<div class="intrude-less">
-			<header id="header" class="inner"><div class="profilepic">	
-	<script src="/javascripts/md5.js"></script>
-	<script type="text/javascript">
-		document.write("<img src='/head.jpg?s=160' alt='Profile Picture' style='width: 160px;' />");
-	</script>
-</div>
-<h1><a href="/">Gang’s Blog</a></h1>
-<p class="subtitle">记录点滴，一步步成长，坚持最初的梦想</p>
-<nav id="main-nav"><ul class="main-navigation">
-  <li><a href="/">Blog</a></li>
-  <li><a href="/blog/archives">Archives</a></li>
-  <li><a href="/about">About</a></li>
-</ul>
-</nav>
-<nav id="sub-nav">
-	<div class="social">
-		
-		<a class="weibo" href="http://www.weibo.com/1739298021" title="Weibo">Weibo</a>
-		
-		
-		
-		
-		
-		<a class="github" href="https://github.com/NumberGuy" title="GitHub">GitHub</a>
-		
-		
-		
-		
-		
-		
-		
-		<a class="rss" href="/atom.xml" title="RSS">RSS</a>
-		
-	</div>
-</nav>
-
-</header>				
-			</div>
-		</div>	
-		<div class="mid-col">
-			
-				
-			
-			<div class="mid-col-container">
-				<div id="content" class="inner">
-<div itemscope itemtype="http://schema.org/Blog">
-
-
-    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-	<div class="meta">
-		<div class="date">
-
-
-
-
-
-
-
+  <title><![CDATA[Category: Ios翻译 | Gang’s Blog]]></title>
+  <link href="http://NumberGuy.github.io/blog/categories/iosfan-yi/atom.xml" rel="self"/>
+  <link href="http://NumberGuy.github.io/"/>
+  <updated>2014-05-11T12:45:14+08:00</updated>
+  <id>http://NumberGuy.github.io/</id>
+  <author>
+    <name><![CDATA[NumberGuy]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
 
   
-
-
-<time datetime="2014-05-07T20:55:59+08:00" data-updated="true" itemprop="datePublished">May 7<span>th</span>, 2014</time></div>
-		<div class="tags">
-
-
-	<a class='category' href='/blog/categories/iosfan-yi/'>ios翻译</a>
-
-
-</div>
-		
- 
-        <a href="/blog/2014/05/07/new-post/#comments"></a>
-         
-	</div>
-	<h1 class="title" itemprop="name"><a href="/blog/2014/05/07/new-post/" itemprop="url">理解UIScrollView</a></h1>
-	<div class="entry-content" itemprop="articleBody">
-		<p>我是一个对Mike Ashʼs系列文章的超级粉丝，尤其是他解释怎么去通过抓取进行重新
+  <entry>
+    <title type="html"><![CDATA[理解UIScrollView]]></title>
+    <link href="http://NumberGuy.github.io/blog/2014/05/07/new-post/"/>
+    <updated>2014-05-07T20:55:59+08:00</updated>
+    <id>http://NumberGuy.github.io/blog/2014/05/07/new-post</id>
+    <content type="html"><![CDATA[<p>我是一个对Mike Ashʼs系列文章的超级粉丝，尤其是他解释怎么去通过抓取进行重新
 building来确定Cocoa 工作特点。在本篇文章，我将尝试去做一些相似的事情，来完成我自己简单的scroll view，只有几行代码。</p>
 
 <p>   但是，首先让我们来近距离来了解UIKit 中的系统坐标的工作机制。如果你仅仅对scoll view的实现感兴趣，你就跳过下面的这个部分。</p>
@@ -190,7 +99,7 @@ mainView.bounds = bounds;
 </code></pre>
 
 <p>  当view 的位置固定后，可以想象下把坐标系面板当作一块透明的薄膜，我们能够
-四周的拖动，我们看到的view可以当作一个固定的窗口，调整bound&#8217;s的原点就相当于
+四周的拖动，我们看到的view可以当作一个固定的窗口，调整bound's的原点就相当于
 移动透明的薄膜，就可以让部分的view元素，在view上面滚动显示。</p>
 
 <p><img src="http://numberguyblogsimagessource.qiniudn.com/1401715.gif" title="Title" alt="alt text" /></p>
@@ -281,79 +190,7 @@ self.bounds = bounds;
  2.实际上，除非clipsToBounds == YES（默认是NO），子视图超过bounds部分将会被显示
 。可是，view不能检测超出部分的bounds。   
 </code></pre>
-
-		
-		
-	</div>
-
-</article>
-
-
-    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-	<div class="meta">
-		<div class="date">
-
-
-
-
-
-
-
-
+]]></content>
+  </entry>
   
-
-
-<time datetime="2014-03-23T19:34:01+08:00" data-updated="true" itemprop="datePublished">Mar 23<span>rd</span>, 2014</time></div>
-		<div class="tags">
-
-
-	<a class='category' href='/blog/categories/life/'>Life</a>, <a class='category' href='/blog/categories/record/'>Record</a>
-
-
-</div>
-		
- 
-        <a href="/blog/2014/03/23/new-house/#comments"></a>
-         
-	</div>
-	<h1 class="title" itemprop="name"><a href="/blog/2014/03/23/new-house/" itemprop="url">New House</a></h1>
-	<div class="entry-content" itemprop="articleBody">
-		<p>终于在彭爹帮忙住下，把这个地方给搭起来了，多省事阿，不要首付，不要还贷，就是还有很多地方，需要装饰下，目前还是很糙的样子。 我还是一个笨小孩，不然怎么到现在还木有搞好，昨晚搞到两点多。不过现在知道整个东西的来龙去脉了，程序员都喜欢马后炮的那种。为什么要搭建这个东西，不是为了私密，不是吹嘘，只是想记录自己成长的点点滴滴。作为程序员写代码本身就是在写作，所以可以提高自己的写作水平。把自己的学到，遇到的问题在这个地方一一总结，一一说明。同时，也算是分享下吧（其实是很难拿的出手）。 最后勉励一下自己： If you are stuck，you have to work your own way out!</p>
-
-		
-		
-	</div>
-
-</article>
-
-</div>
-<nav id="pagenavi">
-    
-    
-   <center><a href="/blog/archives">All Archives</a></center>
-</nav></div>
-			</div>
-			<footer id="footer" class="inner"><p>
-  Copyright &copy; 2014 - NumberGuy -
-  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
-</p>
-
-Design credit: <a href="http://shashankmehta.in/archive/2012/greyshade.html">Shashank Mehta</a></footer>
-			<script src="/javascripts/slash.js"></script>
-<script src="/javascripts/jquery.fancybox.pack.js"></script>
-<script type="text/javascript">
-(function($){
-	$('.fancybox').fancybox();
-})(jQuery);
-</script> <!-- Delete or comment this line to disable Fancybox -->
-
-
-
-
-
-
-
-		</div>
-	</div>
-</body>
-</html>
+</feed>
