@@ -1,0 +1,168 @@
+---
+layout: post
+title: "理解UIScrollView"
+date: 2014-05-07 20:55:59 +0800
+comments: true
+categories: ios翻译
+---
+         
+我是一个对Mike Ashʼs系列文章的超级粉丝，尤其是他解释怎么去通过抓取进行重新
+building来确定Cocoa 工作特点。在本篇文章，我将尝试去做一些相似的事情，来完成我自己简单的scroll view，只有几行代码。
+
+   但是，首先让我们来近距离来了解UIKit 中的系统坐标的工作机制。如果你仅仅对scoll view的实现感兴趣，你就跳过下面的这个部分。
+##Coordinate Systems
+每个view都定义属于它自己的坐标系，就这样的坐标系。X轴指向右边，Y轴指向下
+
+![alt text](http://numberguyblogsimagessource.qiniudn.com/1405711.png "Title")
+
+      A UIView coordinate system.       
+                 
+ 注意下这个逻辑的坐标系没有联系，view的高度和宽度。这个没有边界和无限延伸在各个方向。（1）好的，现在我们来添加一些元素（别名：subview）在坐标系中。每一个也是的矩形代表一个subview。
+
+![alt text](http://numberguyblogsimagessource.qiniudn.com/14050712.png "Title")
+
+
+在代码中，我们应该这样写下：
+
+     UIView *redView = [[UIView alloc] initWithFrame:CGRectMake(20, 20, 100, 100)];
+     redView.backgroundColor = [UIColor colorWithRed:0.815 green:0.007 blue:0.105 alpha:1];
+
+     UIView *greenView = [[UIView alloc] initWithFrame:CGRectMake(150, 160, 150, 200)];
+     greenView.backgroundColor = [UIColor colorWithRed:0.494 green:0.827
+    blue:0.129 alpha:1];
+
+    UIView *blueView = [[UIView alloc] initWithFrame:CGRectMake(40, 400, 200, 150)];
+    blueView.backgroundColor = [UIColor colorWithRed:0.29 green:0.564
+    blue:0.886 alpha:1];
+
+    UIView *yellowView = [[UIView alloc] initWithFrame:CGRectMake(100, 600, 180, 150)];
+    yellowView.backgroundColor = [UIColor colorWithRed:0.972 green:0.905
+    blue:0.109 alpha:1];
+
+    [mainView addSubview:redView];
+    [mainView addSubview:greenView];
+    [mainView addSubview:blueView];
+    [mainView addSubview:yellowView];
+    
+##Bounds
+UIView 的文档中这样描述[ bounds](https://developer.apple.com/library/ios/documentation/uikit/reference/UIView_Class/UIView/UIView.html#//apple_ref/doc/uid/TP40006816-CH3-SW1) 这个属性：
+
+           The bounds rectangle … describes the view’s location and size in its own coordinate system.
+           
+一个view可以被看作一个window 或者是被坐标系定义的画板上面的一个矩形视图区域的视图孔而view的bounds 就是设定这个矩形区域的位置和大小。
+
+回头来说下我们视图的bound矩形区域，高度和宽度分别为（320，480），原点的坐标默认为
+（0，0）。view变成子视图显示在整个坐标的面板上面的一部分。所有超过边界的都存在，只是
+隐藏起来了。
+![alt text](http://numberguyblogsimagessource.qiniudn.com/1405713.png "Title")
+ 
+     A view provides a viewport into the plane defined by its coordinate system. The viewʼs bounds rectangle describe the position and size of the visible area.
+
+##Frame
+
+下一步，我们将要修改矩形边界框的原地位置
+
+    CGRect bounds = mainView.bounds;
+    bounds.origin = CGPointMake(0, 100);
+    mainView.bounds = bounds;
+矩形边界的原点的位置现在为：（0，100），现在我们的屏幕看起来像这样的：
+![alt text](http://numberguyblogsimagessource.qiniudn.com/1405714.png "Title")
+              
+              Modifying the origin of the bounds rectangle is equivalent to moving the viewport.
+ 看起来像是通过把view向下移动100距离，但是事实上只是相对他自己坐标系，
+该view得实际的在屏幕的位置（或者是在superview，或者可以在精确点说）依然是
+固定。原因是，改变的那个决定因素是 [frame](https://developer.apple.com/library/ios/documentation/uikit/reference/UIView_Class/UIView/UIView.html#//apple_ref/doc/uid/TP40006816-CH3-SW5)，没有发生改变。
+
+      The frame rectangle … describes the view’s location and size in its superview’s coordinate system.          
+      
+  当view 的位置固定后，可以想象下把坐标系面板当作一块透明的薄膜，我们能够
+四周的拖动，我们看到的view可以当作一个固定的窗口，调整bound's的原点就相当于
+移动透明的薄膜，就可以让部分的view元素，在view上面滚动显示。  
+
+![alt text](http://numberguyblogsimagessource.qiniudn.com/1401715.gif "Title") 
+
+这就是完整的UIScrollView的滚动的原理，尽管从用户的视角来看屏幕上面的view的子视图
+移动了，但是他们的位置就view来说依然没有发生改变。
+
+##Letʼs Build UIScrollView
+
+scrollview 不需要不断通过更新他的子视图去使它滚动。仅仅靠调整它自己的bounds
+原点。依靠这个原理，实现一个简单的scroll view 一点也不繁琐的。我们添加一个
+手势动作去监听用户滑动的手势，根据手势的我们通过拖动的距离改变的view的bounds
+原点位置。
+
+
+     // CustomScrollView.h
+     @import UIKit;
+
+    @interface CustomScrollView : UIView
+
+    @property (nonatomic) CGSize contentSize;
+
+    @end
+
+     // CustomScrollView.m
+     #import "CustomScrollView.h"
+
+    @implementation CustomScrollView
+
+    - (id)initWithFrame:(CGRect)frame
+    {
+    self = [super initWithFrame:frame];
+    if (self == nil) {
+        return nil;
+    }
+    UIPanGestureRecognizer *gestureRecognizer = [[UIPanGestureRecognizer alloc] 
+        initWithTarget:self action:@selector(handlePanGesture:)];
+    [self addGestureRecognizer:gestureRecognizer];
+    return self;
+    }
+
+    - (void)handlePanGesture:(UIPanGestureRecognizer *)gestureRecognizer
+    {
+    CGPoint translation = [gestureRecognizer translationInView:self];
+    CGRect bounds = self.bounds;
+
+    // Translate the view's bounds, but do not permit values that would violate contentSize
+    CGFloat newBoundsOriginX = bounds.origin.x - translation.x;
+    CGFloat minBoundsOriginX = 0.0;
+    CGFloat maxBoundsOriginX = self.contentSize.width - bounds.size.width;
+    bounds.origin.x = fmax(minBoundsOriginX, fmin(newBoundsOriginX, maxBoundsOriginX));
+    
+    CGFloat newBoundsOriginY = bounds.origin.y - translation.y;
+    CGFloat minBoundsOriginY = 0.0;
+    CGFloat maxBoundsOriginY = self.contentSize.height - bounds.size.height;
+    bounds.origin.y = fmax(minBoundsOriginY, fmin(newBoundsOriginY, maxBoundsOriginY));
+    
+    self.bounds = bounds;
+    [gestureRecognizer setTranslation:CGPointZero inView:self];
+    }
+
+    @end
+    
+ 看起来和UIScrollview一样，我们有一个contentSize属性必须通过外部设定，来定义来扩展
+滚动的区域。当我们调整bounds时候，我们要确保改变的值有效的值。
+
+ 结果是：
+ 
+ ![alt text](http://numberguyblogsimagessource.qiniudn.com/1405716.gif "Title") 
+ 
+ 
+##Conclusion          
+幸亏在UIKit里面用的是原生的坐标系，这样就可以话费少于30行的代码去实现UIScrolliew
+滚动原理。当然，还有原生UIScrolliew还有更多的东西要去做。滚动的动力学，反弹，滚动
+的方向，缩放，和回调方法等更多的特性我们没有在这里实现。
+
+[The code is now available on GitHub.](https://github.com/ole/CustomScrollView) 
+
+参考以下内容：
+
+[理解 Scroll Views](http://objccn.io/issue-3-2/)
+
+[计算机图形渲染的流程](http://bbs.feng.com/read-htm-tid-6880069.html)
+
+第一次翻译，希望大家多给给点评,新浪微博：[@NumberGuy](http://weibo.com/u/1739298021)
+
+     1.这里不是无止境扩张，坐标系受限制于size的CGFloat的数据类型（32位系统和64位系统），这已经足够的大了，在练习中已经满足。
+     2.实际上，除非clipsToBounds == YES（默认是NO），子视图超过bounds部分将会被显示
+    。可是，view不能检测超出部分的bounds。   

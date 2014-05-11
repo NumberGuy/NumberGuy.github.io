@@ -2,13 +2,13 @@
 #      Main Configs       #
 # ----------------------- #
 
-url: http://yoursite.com
-title: My Octopress Blog
-subtitle: A blogging framework for hackers.
-author: Your Name
+url: http://NumberGuy.github.io
+title: Gang’s Blog
+subtitle: 记录点滴，一步步成长，坚持最初的梦想
+author: NumberGuy
 simple_search: https://www.google.com/search
 description:
-
+titlecase:
 # Default date format is "ordinal" (resulting in "July 22nd 2007")
 # You can customize the format as defined in
 # http://www.ruby-doc.org/core-1.9.2/Time.html#method-i-strftime
@@ -63,14 +63,14 @@ default_asides: [asides/recent_posts.html, asides/github.html, asides/delicious.
 # ----------------------- #
 
 # Github repositories
-github_user:
+github_user: NumberGuy
 github_repo_count: 0
 github_show_profile_link: true
 github_skip_forks: true
 
-# Twitter
-twitter_user:
-twitter_tweet_button: true
+weibo_user: 1739298021  # 微博数字 ID 或域名 ID
+dribbble_user: 
+weibo_share: true # 是否开启微博分享按钮
 
 # Google +1
 google_plus_one: false
@@ -92,6 +92,11 @@ delicious_count: 3
 # Disqus Comments
 disqus_short_name:
 disqus_show_comment_count: false
+
+# duoshuo comments
+duoshuo_comments: true
+duoshuo_short_name: numberguy
+
 
 # Google Analytics
 google_analytics_tracking_id:
