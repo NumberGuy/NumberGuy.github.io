@@ -6,4 +6,4 @@ comments: true
 sharing: false
 footer: true
 ---
-<center>生于皖西小城，漂泊于魔都。开始习惯去记录成长点滴，习惯去分享点滴。IOS dev</center>
+<center>生于皖西小城，从帝都漂泊于魔都，又游到天堂的苏州。开始让自己去记录成长点滴，习惯去分享点滴。IOS dev</center>
